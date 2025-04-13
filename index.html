@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinario Dick Martinez</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('Documento%20P%C3%B3ster%20cient%C3%ADfico%20Simple%20Azul%20(2).jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .calculadora {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-sizing: border-box;
+            position: relative;
+            color: white;
+        }
+
+        .calculadora input, .calculadora select {
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .calculadora button {
+            padding: 10px 20px;
+            border: none;
+            background: orange;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .resultado {
+            margin-top: 15px;
+            font-size: 16px;
+            color: yellow;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: darkred;
+        }
+
+        .boton-calc {
+            background: orange;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 520px;
+            cursor: pointer;
+        }
+
+        /* Animación de botón flotante */
+        @keyframes moverArribaAbajo {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .whatsapp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            text-decoration: none;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            z-index: 2000;
+            animation: moverArribaAbajo 2s infinite ease-in-out;
+        }
+
+        @media (max-width: 600px) {
+            .calculadora {
+                width: 95%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="seccionCalculadora">
+        <a class="boton-calc" onclick="mostrarCalculadora()">Calculadora Online</a>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div class="calculadora">
+            <button class="close-btn" onclick="cerrarCalculadora()">&times;</button>
+            <h2>Calculadora de Peso Ideal para Perros</h2>
+            <select id="raza">
+                <option value="">Selecciona la raza</option>
+                <option value="pequeña">Pequeña</option>
+                <option value="mediana">Mediana</option>
+                <option value="grande">Grande</option>
+            </select>
+            <input type="number" id="peso" placeholder="Peso del perro en kg">
+            <input type="number" id="edad" placeholder="Edad en años (máximo 15)">
+            <button onclick="calcularEstado()">Calcular</button>
+            <div class="resultado" id="resultado"></div>
+        </div>
+    </div>
+
+    <a class="whatsapp" href="https://wa.me/51925519546" target="_blank">💬</a>
+
+    <script>
+        function mostrarCalculadora() {
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function cerrarCalculadora() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('resultado').innerHTML = '';
+            document.getElementById('raza').value = '';
+            document.getElementById('peso').value = '';
+            document.getElementById('edad').value = '';
+        }
+
+        function calcularEstado() {
+            let raza = document.getElementById('raza').value;
+            let peso = parseFloat(document.getElementById('peso').value);
+            let edad = parseInt(document.getElementById('edad').value);
+            let resultado = document.getElementById('resultado');
+
+            if (!raza || isNaN(peso) || isNaN(edad) || peso <= 0 || edad <= 0 || edad > 15) {
+                resultado.innerHTML = "⚠️ Ingresa todos los datos correctamente. Edad máxima: 15 años.";
+                return;
+            }
+
+            let estado = "";
+            let comida = "";
+            let rangoIdeal = {min: 0, max: 0};
+
+            switch(raza) {
+                case "pequeña": rangoIdeal = {min: 2, max: 8}; break;
+                case "mediana": rangoIdeal = {min: 9, max: 20}; break;
+                case "grande": rangoIdeal = {min: 21, max: 50}; break;
+            }
+
+            if (peso < rangoIdeal.min) {
+                estado = "Tu perro está flaco.";
+                comida = "Dale alimento premium alto en proteínas, 3 porciones pequeñas al día.";
+            } else if (peso <= rangoIdeal.max) {
+                estado = "¡Peso ideal! Tu perro está saludable.";
+                comida = "Continúa con alimentación balanceada, 2 porciones al día.";
+            } else if (peso <= rangoIdeal.max + 5) {
+                estado = "Tu perro tiene sobrepeso.";
+                comida = "Dieta light recomendada, reducir snacks y aumentar actividad física.";
+            } else {
+                estado = "Tu perro presenta obesidad.";
+                comida = "Dieta estricta controlada por veterinario y ejercicio diario.";
+            }
+
+            resultado.innerHTML = `<strong>${estado}</strong><br>${comida}`;
+        }
+    </script>
+
+</body>
+</html>
